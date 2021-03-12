@@ -1,0 +1,70 @@
+{
+  "name": "testing-node-apps",
+  "version": "1.0.0",
+  "description": "Testing Node.js Apps",
+  "homepage": "https://github.com/kentcdodds/testing-node-apps",
+  "dependencies": {
+    "@babel/core": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
+    "axios": "^0.19.2",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "cpy": "^8.0.0",
+    "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
+    "express-jwt": "^5.3.1",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.15",
+    "loglevel": "^1.6.6",
+    "nodemon": "^2.0.2",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0"
+  },
+  "devDependencies": {
+    "@babel/register": "^7.8.3",
+    "cross-spawn": "^7.0.1",
+    "eslint": "^6.8.0",
+    "eslint-config-kentcdodds": "^14.7.0",
+    "eslint-import-resolver-jest": "^3.0.0",
+    "faker": "^4.1.0",
+    "husky": "^4.2.0",
+    "inquirer": "^7.0.3",
+    "is-ci": "^2.0.0",
+    "is-ci-cli": "^2.0.0",
+    "jest": "^25.1.0",
+    "jest-in-case": "^1.0.2",
+    "jest-watch-select-projects": "^1.0.0",
+    "jest-watch-typeahead": "^0.4.2",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^1.19.1",
+    "replace-in-file": "^5.0.2"
+  },
+  "scripts": {
+    "start": "node ./scripts/codesandbox-page.js",
+    "test": "is-ci \"test:exercise:watch\"",
+    "test:exercise": "jest --config test/jest.config.exercises.js",
+    "test:exercise:watch": "npm run test:exercise -- --watchAll",
+    "test:exercise:coverage": "npm run test:exercise -- --coverage",
+    "format": "prettier --write \"**/*.+(js|json|css|md|mdx|html)\"",
+    "lint": "eslint .",
+    "setup": "node ./scripts/setup && npm run validate && node ./scripts/autofill-feedback-email.js",
+    "validate": "npm-run-all --parallel test:exercise:coverage lint"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run validate"
+    }
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ]
+    ]
+  }
+}
