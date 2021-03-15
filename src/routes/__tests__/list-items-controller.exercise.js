@@ -6,12 +6,15 @@ import {
   buildUser,
   buildBook,
   buildListItem,
+  buildNext,
 } from 'utils/generate'
 
 import * as booksDB from '../../db/books'
+import * as listItemsDB from '../../db/list-items'
 import * as listItemsController from '../list-items-controller'
 
 jest.mock('../../db/books')
+jest.mock('../../db/list-items')
 
 beforeEach(() => {
   jest.clearAllMocks()
@@ -55,4 +58,25 @@ test('createListItem returns a 400 error if no bookId is provided', async () => 
     ]
   `)
   expect(res.json).toHaveBeenCalledTimes(1)
+})
+
+test('setListItem sets the listItem on the req', async () => {
+  const user = buildUser()
+  const listItem = buildListItem({ownerId: user.id})
+
+  listItemsDB.readById.mockResolvedValueOnce(listItem)
+
+  const req = buildReq({user, params: {id: listItem.id}})
+  const res = buildRes()
+  const next = buildNext()
+
+  await listItemsController.setListItem(req, res, next)
+
+  expect(listItemsDB.readById).toHaveBeenCalledWith(listItem.id)
+  expect(listItemsDB.readById).toHaveBeenCalledTimes(1)
+
+  expect(next).toHaveBeenCalledWith(/* nothing */)
+  expect(next).toHaveBeenCalledTimes(1)
+
+  expect(req.listItem).toBe(listItem)
 })
