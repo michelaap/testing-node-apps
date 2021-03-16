@@ -60,7 +60,7 @@ test('createListItem returns a 400 error if no bookId is provided', async () => 
   expect(res.json).toHaveBeenCalledTimes(1)
 })
 
-test('setListItem sets the listItem on the req', async () => {
+test('setListIte m sets the listItem on the req', async () => {
   const user = buildUser()
   const listItem = buildListItem({ownerId: user.id})
 
@@ -79,4 +79,29 @@ test('setListItem sets the listItem on the req', async () => {
   expect(next).toHaveBeenCalledTimes(1)
 
   expect(req.listItem).toBe(listItem)
+})
+
+test('setListItem returns a 404 error if the list item does not exist', async () => {
+  listItemsDB.readById.mockResolvedValueOnce(null)
+
+  const fakeListItemId = 'FAKE_LIST_ITEM_ID'
+  const req = buildReq({params: {id: fakeListItemId}})
+  const res = buildRes()
+  const next = buildNext()
+
+  await listItemsController.setListItem(req, res, next)
+
+  expect(listItemsDB.readById).toHaveBeenCalledWith(fakeListItemId)
+  expect(listItemsDB.readById).toHaveBeenCalledTimes(1)
+  expect(next).not.toHaveBeenCalledWith()
+  expect(res.status).toHaveBeenCalledWith(404)
+  expect(res.status).toHaveBeenCalledTimes(1)
+  expect(res.json.mock.calls[0]).toMatchInlineSnapshot(`
+    Array [
+      Object {
+        "message": "No list item was found with the id of FAKE_LIST_ITEM_ID",
+      },
+    ]
+  `)
+  expect(res.json).toHaveBeenCalledTimes(1)
 })
