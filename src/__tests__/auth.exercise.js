@@ -1,20 +1,29 @@
 // Testing Authentication API Routes
 
-// 🐨 import the things you'll need
-// 💰 here, I'll just give them to you. You're welcome
-// import axios from 'axios'
-// import {resetDb} from 'utils/db-utils'
-// import * as generate from 'utils/generate'
-// import startServer from '../start'
+import axios from 'axios'
+import {resetDb} from 'utils/db-utils'
+import * as generate from 'utils/generate'
+import startServer from '../start'
 
-// 🐨 you'll need to start/stop the server using beforeAll and afterAll
-// 💰 This might be helpful: server = await startServer({port: 8000})
+let server
+beforeAll(async () => {
+  server = await startServer({port: 8000})
+})
 
-// 🐨 beforeEach test in this file we want to reset the database
+afterAll(() => server.close())
+
+beforeEach(() => resetDb())
 
 test('auth flow', async () => {
-  // 🐨 get a username and password from generate.loginForm()
-  //
+  const {username, password} = generate.loginForm()
+
+  const response = await axios.post('http://localhost:8000/api/auth/register', {
+    username,
+    password,
+  })
+
+  console.log(response)
+
   // register
   // 🐨 use axios.post to post the username and password to the registration endpoint
   // 💰 http://localhost:8000/api/auth/register
