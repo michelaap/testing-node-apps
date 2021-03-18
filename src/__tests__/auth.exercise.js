@@ -35,14 +35,11 @@ test('auth flow', async () => {
 
   expect(lResult.data.user).toEqual(rResult.data.user)
 
-  // authenticated request
-  // 🐨 use axios.get(url, config) to GET the user's information
-  // 💰 http://localhost:8000/api/auth/me
-  // 💰 This request must be authenticated via the Authorization header which
-  // you can add to the config object: {headers: {Authorization: `Bearer ${token}`}}
-  // Remember that you have the token from the registration and login requests.
-  //
-  // 🐨 assert that the result you get back is correct
-  // 💰 (again, this should be the same data you get back in the other requests,
-  // so you can compare it with that).
+  const mResult = await axios.get('http://localhost:8000/api/auth/me', {
+    headers: {
+      Authorization: `Bearer ${lResult.data.user.token}`,
+    },
+  })
+
+  expect(mResult.data.user).toEqual(lResult.data.user)
 })
