@@ -22,20 +22,12 @@ test('auth flow', async () => {
     password,
   })
 
-  console.log(response)
+  expect(response.data.user).toEqual({
+    token: expect.any(String),
+    id: expect.any(String),
+    username,
+  })
 
-  // register
-  // 🐨 use axios.post to post the username and password to the registration endpoint
-  // 💰 http://localhost:8000/api/auth/register
-  //
-  // 🐨 assert that the result you get back is correct
-  // 💰 it'll have an id and a token that will be random every time.
-  // You can either only check that `result.data.user.username` is correct, or
-  // for a little extra credit 💯 you can try using `expect.any(String)`
-  // (an asymmetric matcher) with toEqual.
-  // 📜 https://jestjs.io/docs/en/expect#expectanyconstructor
-  // 📜 https://jestjs.io/docs/en/expect#toequalvalue
-  //
   // login
   // 🐨 use axios.post to post the username and password again, but to the login endpoint
   // 💰 http://localhost:8000/api/auth/login
