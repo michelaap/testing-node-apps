@@ -17,26 +17,24 @@ beforeEach(() => resetDb())
 test('auth flow', async () => {
   const {username, password} = generate.loginForm()
 
-  const response = await axios.post('http://localhost:8000/api/auth/register', {
+  const rResult = await axios.post('http://localhost:8000/api/auth/register', {
     username,
     password,
   })
 
-  expect(response.data.user).toEqual({
+  expect(rResult.data.user).toEqual({
     token: expect.any(String),
     id: expect.any(String),
     username,
   })
 
-  // login
-  // 🐨 use axios.post to post the username and password again, but to the login endpoint
-  // 💰 http://localhost:8000/api/auth/login
-  //
-  // 🐨 assert that the result you get back is correct
-  // 💰 tip: the data you get back is exactly the same as the data you get back
-  // from the registration call, so this can be done really easily by comparing
-  // the data of those results with toEqual
-  //
+  const lResult = await axios.post('http://localhost:8000/api/auth/login', {
+    username,
+    password,
+  })
+
+  expect(lResult.data.user).toEqual(rResult.data.user)
+
   // authenticated request
   // 🐨 use axios.get(url, config) to GET the user's information
   // 💰 http://localhost:8000/api/auth/me
