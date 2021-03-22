@@ -46,9 +46,9 @@ test('listItem CRUD', async () => {
   expect(rData.listItem).toEqual(cData.listItem)
 
   // UPDATE
-  // 🐨 make a PUT request to the `listItemIdUrl` with some updates
-  // 💰 const updates = {notes: generate.notes()}
-  // 🐨 assert that this returns the right stuff (should be the same as the READ except with the updated notes)
+  const updates = {notes: generate.notes()}
+  const uData = await authAPI.put(listItemIdUrl, updates)
+  expect(uData.listItem).toEqual({...rData.listItem, ...updates})
 
   // DELETE
   // 🐨 make a DELETE request to the `listItemIdUrl`
