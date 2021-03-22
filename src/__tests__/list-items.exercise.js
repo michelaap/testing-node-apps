@@ -51,14 +51,14 @@ test('listItem CRUD', async () => {
   expect(uData.listItem).toEqual({...rData.listItem, ...updates})
 
   // DELETE
-  // 🐨 make a DELETE request to the `listItemIdUrl`
-  // 🐨 assert that this returns the right stuff (💰 {success: true})
+  const dData = await authAPI.delete(listItemIdUrl)
+  expect(dData).toEqual({success: true})
 
-  // 🐨 try to make a GET request to the `listItemIdUrl` again.
-  // 💰 this promise should reject. You can do a try/catch if you want, or you
-  // can use the `resolve` utility from utils/async:
-  // 💰 const error = await authAPI.get(listItemIdUrl).catch(resolve)
-  // 🐨 assert that the status is 404 and the error.data is correct
+  const error = await authAPI.get(listItemIdUrl).catch(resolve)
+  expect(error.status).toBe(404)
+  expect(error.data).toEqual({
+    message: `No list item was found with the id of ${listItemId}`,
+  })
 })
 
 /* eslint no-unused-vars:0 */
