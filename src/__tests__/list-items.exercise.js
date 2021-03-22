@@ -19,9 +19,6 @@ afterAll(() => server.close())
 beforeEach(() => resetDb())
 
 async function setup() {
-  // 💰 this bit isn't as important as the rest of what you'll be learning today
-  // so I'm going to give it to you, but don't just skip over it. Try to figure
-  // out what's going on here.
   const testUser = await insertTestUser()
   const authAPI = axios.create({baseURL})
   authAPI.defaults.headers.common.authorization = `Bearer ${testUser.token}`
@@ -31,22 +28,15 @@ async function setup() {
 
 test('listItem CRUD', async () => {
   const {testUser, authAPI} = await setup()
-
-  // 🐨 create a book object and insert it into the database
-  // 💰 use generate.buildBook and await booksDB.insert
+  const book = generate.buildBook()
+  await booksDB.insert(book)
 
   // CREATE
-  // 🐨 create a new list-item by posting to the list-items endpoint with a bookId
-  // 💰 the data you send should be: {bookId: book.id}
-
-  // 🐨 assert that the data you get back is correct
-  // 💰 it should have an ownerId (testUser.id) and a bookId (book.id)
-  // 💰 if you don't want to assert on all the other properties, you can use
-  // toMatchObject: https://jestjs.io/docs/en/expect#tomatchobjectobject
-
-  // 💰 you might find this useful for the future requests:
-  // const listItemId = cData.listItem.id
-  // const listItemIdUrl = `list-items/${listItemId}`
+  const cData = await authAPI.post('list-items', {bookId: book.id})
+  expect(cData.listItem).toMatchObject({
+    ownerId: testUser.id,
+    bookId: book.id,
+  })
 
   // READ
   // 🐨 make a GET to the `listItemIdUrl`
